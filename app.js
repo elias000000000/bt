@@ -1,11 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // ========================
-  // Header-Bereich
-  // ========================
   const greetingEl = document.getElementById('greeting');
   const monthRangeEl = document.getElementById('monthRange');
   const currentDateEl = document.getElementById('currentDate');
-  const userNameInput = document.getElementById('userName');
+  const welcomeModal = document.getElementById('welcomeModal');
+  const welcomeNameInput = document.getElementById('welcomeName');
 
   function updateHeader() {
     const name = localStorage.getItem('userName') || '';
@@ -22,40 +20,34 @@ document.addEventListener('DOMContentLoaded', () => {
   setInterval(updateHeader, 1000);
   updateHeader();
 
+  // Willkommens-Popup anzeigen, wenn kein Name gespeichert ist
+  if (!localStorage.getItem('userName')) {
+    welcomeModal.classList.add('active');
+  }
+
+  document.getElementById('welcomeSave').addEventListener('click', () => {
+    const name = welcomeNameInput.value.trim();
+    if (name) {
+      localStorage.setItem('userName', name);
+      welcomeModal.classList.remove('active');
+      updateHeader();
+    }
+  });
+
   document.getElementById('saveName').addEventListener('click', () => {
-    const name = userNameInput.value.trim();
+    const name = document.getElementById('userName').value.trim();
     if (name) {
       localStorage.setItem('userName', name);
       updateHeader();
     }
   });
 
-  // ========================
-  // Variablen
-  // ========================
-  const totalBudgetInput = document.getElementById('totalBudget');
-  const saveBudgetBtn = document.getElementById('saveBudget');
-  const remainingEl = document.getElementById('remaining');
-  const spentEl = document.getElementById('spent');
-  const txDesc = document.getElementById('txDesc');
-  const txAmount = document.getElementById('txAmount');
-  const txCategory = document.getElementById('txCategory');
-  const addTxBtn = document.getElementById('addTx');
-  const historyList = document.getElementById('historyList');
-  const filterCategory = document.getElementById('filterCategory');
-  const searchHistory = document.getElementById('searchHistory');
-  const exportCSVBtn = document.getElementById('exportCSV');
-  const resetHistoryBtn = document.getElementById('resetHistory');
-  const exportChartBtn = document.getElementById('exportChart');
-  const percentageChartCanvas = document.getElementById('percentageChart');
-  const categoryChartCanvas = document.getElementById('categoryChart');
-
   let budget = parseFloat(localStorage.getItem('budget')) || 0;
   let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
 
-  // ========================
-  // Funktionen
-  // ========================
+  const remainingEl = document.getElementById('remaining');
+  const spentEl = document.getElementById('spent');
+
   function updateSummary() {
     const spent = transactions.reduce((sum, t) => sum + t.amount, 0);
     spentEl.textContent = `CHF ${spent.toFixed(2)}`;
@@ -68,36 +60,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderHistory() {
+    const historyList = document.getElementById('historyList');
     historyList.innerHTML = '';
-    transactions
-      .filter(t =>
-        (!filterCategory.value || t.category === filterCategory.value) &&
-        (!searchHistory.value || t.desc.toLowerCase().includes(searchHistory.value.toLowerCase()))
-      )
-      .forEach(t => {
-        const item = document.createElement('div');
-        item.className = 'panel';
-        item.textContent = `${t.category} - ${t.desc} - CHF ${t.amount.toFixed(2)}`;
-        historyList.appendChild(item);
-      });
-  }
-
-  function renderCategories() {
-    filterCategory.innerHTML = '<option value="">Alle Kategorien</option>';
-    const categories = [...new Set(transactions.map(t => t.category))];
-    categories.forEach(cat => {
-      const opt = document.createElement('option');
-      opt.value = cat;
-      opt.textContent = cat;
-      filterCategory.appendChild(opt);
+    transactions.forEach(t => {
+      const item = document.createElement('div');
+      item.className = 'panel';
+      item.textContent = `${t.category} - ${t.desc} - CHF ${t.amount.toFixed(2)}`;
+      historyList.appendChild(item);
     });
   }
 
-  // ========================
-  // Chart.js Diagramme
-  // ========================
   let categoryChart, percentageChart;
-
   function updateCharts() {
     const categorySums = {};
     transactions.forEach(t => {
@@ -109,54 +82,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const colors = labels.map((_, i) => `hsl(${i * 50}, 70%, 60%)`);
 
     if (categoryChart) categoryChart.destroy();
-    categoryChart = new Chart(categoryChartCanvas, {
+    categoryChart = new Chart(document.getElementById('categoryChart'), {
       type: 'bar',
-      data: {
-        labels,
-        datasets: [{ label: 'CHF', data, backgroundColor: colors }]
-      },
+      data: { labels, datasets: [{ label: 'CHF', data, backgroundColor: colors }] },
       options: { responsive: true, plugins: { legend: { display: false } } }
     });
 
     if (percentageChart) percentageChart.destroy();
-    percentageChart = new Chart(percentageChartCanvas, {
+    percentageChart = new Chart(document.getElementById('percentageChart'), {
       type: 'pie',
-      data: {
-        labels,
-        datasets: [{ data, backgroundColor: colors }]
-      },
+      data: { labels, datasets: [{ data, backgroundColor: colors }] },
       options: { responsive: true }
     });
   }
 
-  // ========================
-  // Event-Listener
-  // ========================
-  saveBudgetBtn.addEventListener('click', () => {
-    budget = parseFloat(totalBudgetInput.value) || 0;
+  // Event Listener für Budget speichern
+  document.getElementById('saveBudget').addEventListener('click', () => {
+    budget = parseFloat(document.getElementById('totalBudget').value) || 0;
     saveData();
     updateSummary();
   });
 
-  addTxBtn.addEventListener('click', () => {
-    const desc = txDesc.value.trim();
-    const amount = parseFloat(txAmount.value);
-    const category = txCategory.value;
+  // Transaktion hinzufügen
+  document.getElementById('addTx').addEventListener('click', () => {
+    const desc = document.getElementById('txDesc').value.trim();
+    const amount = parseFloat(document.getElementById('txAmount').value);
+    const category = document.getElementById('txCategory').value;
     if (!desc || isNaN(amount)) return;
     transactions.push({ desc, amount, category });
     saveData();
     updateSummary();
     renderHistory();
-    renderCategories();
     updateCharts();
-    txDesc.value = '';
-    txAmount.value = '';
+    document.getElementById('txDesc').value = '';
+    document.getElementById('txAmount').value = '';
   });
 
-  filterCategory.addEventListener('change', renderHistory);
-  searchHistory.addEventListener('input', renderHistory);
-
-  exportCSVBtn.addEventListener('click', () => {
+  // CSV Export
+  document.getElementById('exportCSV').addEventListener('click', () => {
     let csv = 'Kategorie,Beschreibung,Betrag\n';
     transactions.forEach(t => {
       csv += `${t.category},${t.desc},${t.amount}\n`;
@@ -170,49 +133,25 @@ document.addEventListener('DOMContentLoaded', () => {
     URL.revokeObjectURL(url);
   });
 
-  resetHistoryBtn.addEventListener('click', () => {
-    if (confirm('Verlauf wirklich löschen?')) {
-      transactions = [];
-      saveData();
-      updateSummary();
-      renderHistory();
-      renderCategories();
-      updateCharts();
-    }
-  });
-
-  exportChartBtn.addEventListener('click', () => {
-    const url = categoryChartCanvas.toDataURL('image/png');
+  // Diagramm Export
+  document.getElementById('exportChart').addEventListener('click', () => {
+    const url = document.getElementById('categoryChart').toDataURL('image/png');
     const a = document.createElement('a');
     a.href = url;
     a.download = 'diagramm.png';
     a.click();
   });
 
-  // ========================
-  // Tab-Wechsel Navigation
-  // ========================
-  document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const tabName = btn.getAttribute('data-tab');
-      document.querySelectorAll('.tab').forEach(tab => {
-        if (tab.id === `tab-${tabName}`) {
-          tab.classList.add('active');
-          tab.style.display = 'block';
-        } else {
-          tab.classList.remove('active');
-          tab.style.display = 'none';
-        }
-      });
-    });
+  // Downloads auch in den Einstellungen
+  document.getElementById('settingsExportCSV').addEventListener('click', () => {
+    document.getElementById('exportCSV').click();
   });
 
-  // ========================
+  document.getElementById('settingsExportChart').addEventListener('click', () => {
+    document.getElementById('exportChart').click();
+  });
+
   // Theme-Wechsel
-  // ========================
   document.querySelectorAll('[data-theme-select]').forEach(btn => {
     btn.addEventListener('click', () => {
       const theme = btn.getAttribute('data-theme-select');
@@ -220,15 +159,22 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('theme', theme);
     });
   });
-
   const savedTheme = localStorage.getItem('theme') || 'standard';
   document.documentElement.setAttribute('data-theme', savedTheme);
 
-  // ========================
-  // Initialisierung
-  // ========================
+  // Tab Navigation
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const tabName = btn.getAttribute('data-tab');
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.style.display = tab.id === `tab-${tabName}` ? 'block' : 'none';
+      });
+    });
+  });
+
   updateSummary();
   renderHistory();
-  renderCategories();
   updateCharts();
 });
