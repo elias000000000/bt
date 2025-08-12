@@ -1,152 +1,225 @@
-document.addEventListener('DOMContentLoaded', () => {
-  // Neue Header-Elemente
-  const greetingEl = document.getElementById('greeting');
-  const monthRangeEl = document.getElementById('monthRange');
-  const currentDateEl = document.getElementById('currentDate');
-  const userNameInput = document.getElementById('userName');
+/* ========================
+   Grundlayout & Reset
+   ======================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-  function updateHeader() {
-    const name = localStorage.getItem('userName') || '';
-    const now = new Date();
-    const month = now.toLocaleString('de-DE', { month: 'long' });
-    const year = now.getFullYear();
-    const dateTime = now.toLocaleString('de-DE', { dateStyle: 'full', timeStyle: 'short' });
+html {
+  font-family: 'Nunito', sans-serif;
+  font-size: 16px;
+  background: var(--bg);
+  color: var(--text);
+  padding-top: env(safe-area-inset-top); /* Dynamic Island / Notch Abstand */
+}
 
-    greetingEl.textContent = `Hallo ${name || ''}`;
-    monthRangeEl.textContent = `Budget für ${month} ${year}`;
-    currentDateEl.textContent = dateTime;
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========================
+   Farbvariablen
+   ======================== */
+:root {
+  --bg: #ffffff;
+  --text: #1c1c1c;
+  --accent: #3a86ff;
+  --accent-hover: #265dd8;
+  --glass: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+  --bg: #121212;
+  --text: #f0f0f0;
+  --accent: #3a86ff;
+  --accent-hover: #5ab0ff;
+  --glass: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+/* ========================
+   Navigation
+   ======================== */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(env(safe-area-inset-top) + 6px) 12px 6px 12px;
+  background: var(--glass);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.brand {
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+.nav-items {
+  display: flex;
+  gap: 6px;
+}
+
+.nav-btn {
+  border: none;
+  background: transparent;
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.nav-btn.active,
+.nav-btn:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ========================
+   Panels & Tabs
+   ======================== */
+.panel {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.tab {
+  display: none;
+}
+
+.tab.active {
+  display: block;
+}
+
+/* ========================
+   Buttons
+   ======================== */
+.btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+}
+
+.btn-ghost:hover {
+  background: var(--glass);
+}
+
+.btn-danger {
+  background: #d62828;
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background: #a11e1e;
+}
+
+/* ========================
+   Inputs
+   ======================== */
+input,
+select {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  background: transparent;
+  color: var(--text);
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* ========================
+   Charts
+   ======================== */
+canvas {
+  max-width: 100%;
+}
+
+/* ========================
+   Verlaufsliste
+   ======================== */
+.history-list .panel {
+  margin-bottom: 6px;
+}
+
+/* ========================
+   Modal
+   ======================== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.welcome-panel {
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  border-radius: 12px;
+  padding: 16px;
+}
+
+/* ========================
+   Toast
+   ======================== */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  display: none;
+}
+
+/* ========================
+   iPhone Hochformat Optimierung
+   ======================== */
+@media screen and (max-width: 768px) {
+  html {
+    font-size: 15px;
   }
-
-  setInterval(updateHeader, 1000);
-  updateHeader();
-
-  // Name speichern
-  document.getElementById('saveName').addEventListener('click', () => {
-    const name = userNameInput.value.trim();
-    if (name) {
-      localStorage.setItem('userName', name);
-      updateHeader();
-    }
-  });
-
-  // ========================
-  // Rest deiner ursprünglichen app2.js Funktionen
-  // ========================
-
-  const totalBudgetInput = document.getElementById('totalBudget');
-  const saveBudgetBtn = document.getElementById('saveBudget');
-  const remainingEl = document.getElementById('remaining');
-  const spentEl = document.getElementById('spent');
-  const txDesc = document.getElementById('txDesc');
-  const txAmount = document.getElementById('txAmount');
-  const txCategory = document.getElementById('txCategory');
-  const addTxBtn = document.getElementById('addTx');
-  const historyList = document.getElementById('historyList');
-  const filterCategory = document.getElementById('filterCategory');
-  const searchHistory = document.getElementById('searchHistory');
-  const exportCSVBtn = document.getElementById('exportCSV');
-  const resetHistoryBtn = document.getElementById('resetHistory');
-  const exportChartBtn = document.getElementById('exportChart');
-
-  let budget = parseFloat(localStorage.getItem('budget')) || 0;
-  let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-
-  function updateSummary() {
-    const spent = transactions.reduce((sum, t) => sum + t.amount, 0);
-    spentEl.textContent = `CHF ${spent.toFixed(2)}`;
-    remainingEl.textContent = `CHF ${(budget - spent).toFixed(2)}`;
+  .nav-items {
+    gap: 4px;
   }
-
-  function saveData() {
-    localStorage.setItem('budget', budget);
-    localStorage.setItem('transactions', JSON.stringify(transactions));
+  .btn {
+    padding: 6px 10px;
   }
-
-  function renderHistory() {
-    historyList.innerHTML = '';
-    transactions
-      .filter(t =>
-        (!filterCategory.value || t.category === filterCategory.value) &&
-        (!searchHistory.value || t.desc.toLowerCase().includes(searchHistory.value.toLowerCase()))
-      )
-      .forEach(t => {
-        const item = document.createElement('div');
-        item.className = 'panel';
-        item.textContent = `${t.category} - ${t.desc} - CHF ${t.amount.toFixed(2)}`;
-        historyList.appendChild(item);
-      });
-  }
-
-  function renderCategories() {
-    filterCategory.innerHTML = '<option value="">Alle Kategorien</option>';
-    const categories = [...new Set(transactions.map(t => t.category))];
-    categories.forEach(cat => {
-      const opt = document.createElement('option');
-      opt.value = cat;
-      opt.textContent = cat;
-      filterCategory.appendChild(opt);
-    });
-  }
-
-  saveBudgetBtn.addEventListener('click', () => {
-    budget = parseFloat(totalBudgetInput.value) || 0;
-    saveData();
-    updateSummary();
-  });
-
-  addTxBtn.addEventListener('click', () => {
-    const desc = txDesc.value.trim();
-    const amount = parseFloat(txAmount.value);
-    const category = txCategory.value;
-    if (!desc || isNaN(amount)) return;
-    transactions.push({ desc, amount, category });
-    saveData();
-    updateSummary();
-    renderHistory();
-    renderCategories();
-    txDesc.value = '';
-    txAmount.value = '';
-  });
-
-  filterCategory.addEventListener('change', renderHistory);
-  searchHistory.addEventListener('input', renderHistory);
-
-  exportCSVBtn.addEventListener('click', () => {
-    let csv = 'Kategorie,Beschreibung,Betrag\n';
-    transactions.forEach(t => {
-      csv += `${t.category},${t.desc},${t.amount}\n`;
-    });
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'verlauf.csv';
-    a.click();
-    URL.revokeObjectURL(url);
-  });
-
-  resetHistoryBtn.addEventListener('click', () => {
-    if (confirm('Verlauf wirklich löschen?')) {
-      transactions = [];
-      saveData();
-      updateSummary();
-      renderHistory();
-      renderCategories();
-    }
-  });
-
-  exportChartBtn.addEventListener('click', () => {
-    const chart = document.getElementById('categoryChart');
-    const url = chart.toDataURL('image/png');
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'diagramm.png';
-    a.click();
-  });
-
-  // Initialisierung
-  updateSummary();
-  renderHistory();
-  renderCategories();
-});
-
+}
