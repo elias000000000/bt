@@ -24,19 +24,19 @@ body {
   --text: #1c1c1c;
   --glass: rgba(255,255,255,0.1);
   --glass-border: rgba(0,0,0,0.1);
-  --accent-gradient: linear-gradient(135deg, #3a86ff, #00c6ff);
+  --accent-gradient: linear-gradient(135deg, #ffeb3b, #4caf50); /* Standard: Gelb-Grün */
 }
 
 [data-theme="warm"] {
-  --accent-gradient: linear-gradient(135deg, #ff7e5f, #feb47b);
+  --accent-gradient: linear-gradient(135deg, #ff7e5f, #feb47b); /* Warm: Orange-Rot */
 }
 
 [data-theme="kalt"] {
-  --accent-gradient: linear-gradient(135deg, #00c6ff, #0072ff);
+  --accent-gradient: linear-gradient(135deg, #00c6ff, #0072ff); /* Kalt: Hellblau-Dunkelblau */
 }
 
 [data-theme="standard"] {
-  --accent-gradient: linear-gradient(135deg, #3a86ff, #00c6ff);
+  --accent-gradient: linear-gradient(135deg, #ffeb3b, #4caf50);
 }
 
 /* === Navigation === */
@@ -164,5 +164,3 @@ body {
   margin-bottom: 12px;
   font-size: 1rem;
 }
-
-
