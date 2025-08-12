@@ -1,6 +1,3 @@
-/* ========================
-   Grundlayout & Reset
-   ======================== */
 * {
   margin: 0;
   padding: 0;
@@ -9,25 +6,17 @@
 
 html {
   font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-  font-size: 16px;
   background: var(--bg);
   color: var(--text);
   padding-top: env(safe-area-inset-top);
 }
 
-body {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* ========================
-   Farbvariablen & Themes
-   ======================== */
 :root {
   --bg: #ffffff;
   --text: #1c1c1c;
-  --accent-gradient: linear-gradient(135deg, #3a86ff, #00c6ff); /* Standard */
+  --glass: rgba(255,255,255,0.1);
+  --glass-border: rgba(0,0,0,0.1);
+  --accent-gradient: linear-gradient(135deg, #3a86ff, #00c6ff);
 }
 
 [data-theme="warm"] {
@@ -42,12 +31,8 @@ body {
   --accent-gradient: linear-gradient(135deg, #3a86ff, #00c6ff);
 }
 
-/* ========================
-   Navigation
-   ======================== */
 .nav {
   display: flex;
-  align-items: center;
   justify-content: space-between;
   padding: calc(env(safe-area-inset-top) + 6px) 12px 6px 12px;
   background: var(--glass);
@@ -55,62 +40,25 @@ body {
   border-bottom: 1px solid var(--glass-border);
 }
 
-.brand {
-  font-weight: 800;
-  font-size: 1.2rem;
-}
-
-.nav-items {
-  display: flex;
-  gap: 6px;
-}
-
-.nav-btn {
-  border: none;
-  background: transparent;
-  padding: 6px 10px;
-  border-radius: 8px;
-  color: var(--text);
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.2s ease;
-}
-
-.nav-btn.active,
-.nav-btn:hover {
+.nav-btn.active, .nav-btn:hover {
   background: var(--accent-gradient);
   color: #fff;
 }
 
-/* ========================
-   Panels & Tabs
-   ======================== */
 .panel {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
   border-radius: 12px;
   padding: 12px;
-  margin-bottom: 12px;
+  margin: 12px;
 }
 
-.tab {
-  display: none;
-}
-
-.tab.active {
-  display: block;
-}
-
-/* ========================
-   Buttons
-   ======================== */
 .btn {
   padding: 8px 14px;
   border-radius: 8px;
   border: none;
   cursor: pointer;
   font-weight: 600;
-  transition: background 0.2s ease, transform 0.1s ease;
 }
 
 .btn-primary {
@@ -118,62 +66,22 @@ body {
   color: #fff;
 }
 
-.btn-primary:hover {
-  filter: brightness(1.1);
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
 }
 
-/* ========================
-   Inputs
-   ======================== */
-input,
-select {
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background: transparent;
-  color: var(--text);
+.modal.active {
+  display: flex;
 }
 
-input:focus,
-select:focus {
-  outline: none;
-  border-color: #3a86ff;
-}
-
-/* ========================
-   Charts
-   ======================== */
-canvas {
-  max-width: 100%;
-}
-
-/* ========================
-   Verlaufsliste
-   ======================== */
-.history-list .panel {
-  margin-bottom: 6px;
-}
-
-/* ========================
-   Welcome Screen Hintergrund
-   ======================== */
 .welcome-panel {
   background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  padding: 20px;
   border-radius: 12px;
-  padding: 16px;
-}
-
-/* ========================
-   Mobile Optimierung
-   ======================== */
-@media screen and (max-width: 768px) {
-  html {
-    font-size: 15px;
-  }
-  .nav-items {
-    gap: 4px;
-  }
-  .btn {
-    padding: 6px 10px;
-  }
+  text-align: center;
 }
