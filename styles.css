@@ -1,0 +1,31 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const greetingEl = document.getElementById('greeting');
+  const monthRangeEl = document.getElementById('monthRange');
+  const currentDateEl = document.getElementById('currentDate');
+  const userNameInput = document.getElementById('userName');
+
+  function updateHeader() {
+    const name = localStorage.getItem('userName') || '';
+    const now = new Date();
+    const month = now.toLocaleString('de-DE', { month: 'long' });
+    const year = now.getFullYear();
+    const dateTime = now.toLocaleString('de-DE', { dateStyle: 'full', timeStyle: 'short' });
+
+    greetingEl.textContent = `Hallo ${name || ''}`;
+    monthRangeEl.textContent = `Budget für ${month} ${year}`;
+    currentDateEl.textContent = dateTime;
+  }
+
+  // Live-Uhrzeit
+  setInterval(updateHeader, 1000);
+  updateHeader();
+
+  // Name speichern
+  document.getElementById('saveName').addEventListener('click', () => {
+    const name = userNameInput.value.trim();
+    if (name) {
+      localStorage.setItem('userName', name);
+      updateHeader();
+    }
+  });
+});

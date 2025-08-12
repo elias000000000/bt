@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Budget Planer — Elegant & Performant</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script defer src="app.js"></script>
+</head>
+<body>
+  <div id="app" class="scheme-default" role="application" aria-label="Budget Planer">
+    <nav class="nav">
+      <div class="brand"><span style="color:var(--accent)">Budget</span> Planer</div>
+      <div class="nav-items" role="tablist" aria-label="Hauptnavigation">
+        <button class="nav-btn active" data-tab="budget" role="tab" aria-selected="true">Budget</button>
+        <button class="nav-btn" data-tab="auflistung" role="tab" aria-selected="false">Auflistung</button>
+        <button class="nav-btn" data-tab="history" role="tab" aria-selected="false">Verlauf</button>
+        <button class="nav-btn" data-tab="settings" role="tab" aria-selected="false">Einstellungen</button>
+      </div>
+    </nav>
+
+    <main class="main">
+      <!-- Budget -->
+      <section id="tab-budget" class="tab active" role="tabpanel" aria-hidden="false">
+        <div class="panel month-header" id="headerPanel">
+          <div>
+            <div id="greeting" class="muted">Hallo –</div>
+            <h2 id="monthRange">Budget für –</h2>
+            <div id="currentDate" class="muted">–</div>
+          </div>
+        </div>
+
+        <div class="panel" id="budgetPanel">
+          <label for="totalBudget" class="muted">Gesamtbudget (CHF)</label>
+          <div class="input-row" style="margin-top:8px">
+            <input id="totalBudget" inputmode="decimal" type="number" min="0" step="0.01" placeholder="z.B. 1500.00">
+            <button id="saveBudget" class="btn btn-primary">Speichern</button>
+          </div>
+          <div class="summary" style="margin-top:12px">
+            <div class="card">
+              <div class="muted">Verfügbar</div>
+              <div id="remaining" style="font-size:18px; font-weight:900">—</div>
+            </div>
+            <div class="card">
+              <div class="muted">Bereits ausgegeben</div>
+              <div id="spent" style="font-size:18px; font-weight:900">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" id="txPanel">
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input id="txDesc" type="text" placeholder="Beschreibung (z.B. Kaffee)" style="flex:2">
+            <input id="txAmount" type="number" inputmode="decimal" placeholder="Betrag" style="flex:1; min-width:120px">
+            <select id="txCategory" style="min-width:120px">
+              <option>Handyabo</option><option>Fonds</option><option>Eltern</option><option>Verpflegung</option>
+              <option>Frisör</option><option>Sparen</option><option>Geschenke</option><option>Sonstiges</option>
+            </select>
+            <button id="addTx" class="btn btn-primary">Hinzufügen</button>
+          </div>
+        </div>
+
+        <div class="panel" style="padding-bottom:10px">
+          <h3 style="margin:0 0 8px 0">Ausgaben nach Kategorien</h3>
+          <div style="height:220px"><canvas id="categoryChart"></canvas></div>
+        </div>
+      </section>
+
+      <!-- Auflistung -->
+      <section id="tab-auflistung" class="tab" role="tabpanel" aria-hidden="true" style="display:none">
+        <div class="panel">
+          <h3 style="margin:0 0 8px 0">Prozentuale Verteilung</h3>
+          <div style="height:260px"><canvas id="percentageChart"></canvas></div>
+        </div>
+      </section>
+
+      <!-- Verlauf -->
+      <section id="tab-history" class="tab" role="tabpanel" aria-hidden="true" style="display:none">
+        <div class="panel">
+          <div style="display:flex; gap:8px; margin-bottom:8px;">
+            <input id="searchHistory" placeholder="Suchen..." style="flex:1; padding:8px; border-radius:10px; border:1px solid var(--glass-border); background:transparent; color:var(--text)">
+            <select id="filterCategory" style="padding:8px;border-radius:10px;border:1px solid var(--glass-border); background:transparent; color:var(--text)"><option value="">Alle Kategorien</option></select>
+            <button id="exportCSV" class="btn btn-ghost">Verlauf als CSV exportieren</button>
+          </div>
+          <div id="historyList" class="history-list"></div>
+        </div>
+      </section>
+
+      <!-- Einstellungen -->
+      <section id="tab-settings" class="tab" role="tabpanel" aria-hidden="true" style="display:none">
+        <div class="panel">
+          <div style="display:flex; gap:8px; margin-bottom:10px">
+            <input id="userName" placeholder="Dein Name" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--glass-border); background:transparent; color:var(--text)">
+            <button id="saveName" class="btn btn-primary">Speichern</button>
+          </div>
+
+          <div style="display:flex; gap:8px; margin-bottom:10px">
+            <button id="toggleTheme" class="btn btn-ghost">Hell / Dunkel</button>
+            <div style="display:flex; gap:8px; margin-left:auto">
+              <button data-scheme="default" class="btn btn-ghost schemeBtn">Default</button>
+              <button data-scheme="warm" class="btn btn-ghost schemeBtn">Warm</button>
+              <button data-scheme="cool" class="btn btn-ghost schemeBtn">Cool</button>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:8px;">
+            <button id="resetHistory" class="btn btn-danger">Verlauf löschen</button>
+            <button id="exportChart" class="btn btn-primary" style="margin-left:auto">Diagramm (PNG)</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="nameModal" class="modal" aria-hidden="true">
+    <div class="panel welcome-panel" style="width:360px;">
+      <h3>Willkommen 👋</h3>
+      <p>Wie sollen wir dich nennen?</p>
+      <input id="modalUserName" placeholder="Dein Name" style="width:100%; padding:8px; border-radius:8px; border:1px solid var(--glass-border); background:transparent; color:var(--text)">
+      <div style="display:flex; justify-content:flex-end; margin-top:10px">
+        <button id="modalSaveName" class="btn btn-primary">Speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+</body>
+</html>
