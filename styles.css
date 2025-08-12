@@ -1,1 +1,168 @@
+/* === Reset & Grundlayout === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding-top: env(safe-area-inset-top);
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* === Farbvariablen === */
+:root {
+  --bg: #ffffff;
+  --text: #1c1c1c;
+  --glass: rgba(255,255,255,0.1);
+  --glass-border: rgba(0,0,0,0.1);
+  --accent-gradient: linear-gradient(135deg, #3a86ff, #00c6ff);
+}
+
+[data-theme="warm"] {
+  --accent-gradient: linear-gradient(135deg, #ff7e5f, #feb47b);
+}
+
+[data-theme="kalt"] {
+  --accent-gradient: linear-gradient(135deg, #00c6ff, #0072ff);
+}
+
+[data-theme="standard"] {
+  --accent-gradient: linear-gradient(135deg, #3a86ff, #00c6ff);
+}
+
+/* === Navigation === */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  padding: calc(env(safe-area-inset-top) + 6px) 12px 6px 12px;
+  background: var(--glass);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--glass-border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.nav-items {
+  display: flex;
+  gap: 6px;
+}
+
+.nav-btn {
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.nav-btn.active, .nav-btn:hover {
+  background: var(--accent-gradient);
+  color: #fff;
+}
+
+/* === Panels === */
+.panel {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 12px;
+  margin: 12px;
+  backdrop-filter: blur(12px);
+}
+
+.panel h3 {
+  margin-bottom: 8px;
+}
+
+/* === Buttons === */
+.btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: opacity 0.3s;
+}
+
+.btn-primary {
+  background: var(--accent-gradient);
+  color: #fff;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #ff4d4d, #ff1a1a);
+  color: #fff;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+/* === Tabs === */
+.tab {
+  display: none;
+}
+
+.tab.active {
+  display: block;
+}
+
+/* === Listen / Verlauf === */
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* === Modal (Willkommen) === */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 90%;
+  width: 320px;
+  text-align: center;
+  backdrop-filter: blur(12px);
+}
+
+.modal-content h2 {
+  margin-bottom: 10px;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--glass-border);
+  margin-bottom: 12px;
+  font-size: 1rem;
+}
+
 
