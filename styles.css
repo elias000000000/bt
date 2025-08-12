@@ -8,11 +8,11 @@
 }
 
 html {
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   font-size: 16px;
   background: var(--bg);
   color: var(--text);
-  padding-top: env(safe-area-inset-top); /* Dynamic Island / Notch Abstand */
+  padding-top: env(safe-area-inset-top);
 }
 
 body {
@@ -22,24 +22,24 @@ body {
 }
 
 /* ========================
-   Farbvariablen
+   Farbvariablen & Themes
    ======================== */
 :root {
   --bg: #ffffff;
   --text: #1c1c1c;
-  --accent: #3a86ff;
-  --accent-hover: #265dd8;
-  --glass: rgba(255, 255, 255, 0.1);
-  --glass-border: rgba(0, 0, 0, 0.1);
+  --accent-gradient: linear-gradient(135deg, #3a86ff, #00c6ff); /* Standard */
 }
 
-[data-theme="dark"] {
-  --bg: #121212;
-  --text: #f0f0f0;
-  --accent: #3a86ff;
-  --accent-hover: #5ab0ff;
-  --glass: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.1);
+[data-theme="warm"] {
+  --accent-gradient: linear-gradient(135deg, #ff7e5f, #feb47b);
+}
+
+[data-theme="kalt"] {
+  --accent-gradient: linear-gradient(135deg, #00c6ff, #0072ff);
+}
+
+[data-theme="standard"] {
+  --accent-gradient: linear-gradient(135deg, #3a86ff, #00c6ff);
 }
 
 /* ========================
@@ -78,7 +78,7 @@ body {
 
 .nav-btn.active,
 .nav-btn:hover {
-  background: var(--accent);
+  background: var(--accent-gradient);
   color: #fff;
 }
 
@@ -86,8 +86,8 @@ body {
    Panels & Tabs
    ======================== */
 .panel {
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 12px;
   padding: 12px;
   margin-bottom: 12px;
@@ -114,30 +114,12 @@ body {
 }
 
 .btn-primary {
-  background: var(--accent);
+  background: var(--accent-gradient);
   color: #fff;
 }
 
 .btn-primary:hover {
-  background: var(--accent-hover);
-}
-
-.btn-ghost {
-  background: transparent;
-  color: var(--text);
-}
-
-.btn-ghost:hover {
-  background: var(--glass);
-}
-
-.btn-danger {
-  background: #d62828;
-  color: #fff;
-}
-
-.btn-danger:hover {
-  background: #a11e1e;
+  filter: brightness(1.1);
 }
 
 /* ========================
@@ -147,7 +129,7 @@ input,
 select {
   padding: 8px;
   border-radius: 8px;
-  border: 1px solid var(--glass-border);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   background: transparent;
   color: var(--text);
 }
@@ -155,7 +137,7 @@ select {
 input:focus,
 select:focus {
   outline: none;
-  border-color: var(--accent);
+  border-color: #3a86ff;
 }
 
 /* ========================
@@ -173,21 +155,8 @@ canvas {
 }
 
 /* ========================
-   Modal
+   Welcome Screen Hintergrund
    ======================== */
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: none;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal.active {
-  display: flex;
-}
-
 .welcome-panel {
   background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
   border-radius: 12px;
@@ -195,22 +164,7 @@ canvas {
 }
 
 /* ========================
-   Toast
-   ======================== */
-.toast {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--accent);
-  color: #fff;
-  padding: 10px 16px;
-  border-radius: 8px;
-  display: none;
-}
-
-/* ========================
-   iPhone Hochformat Optimierung
+   Mobile Optimierung
    ======================== */
 @media screen and (max-width: 768px) {
   html {
