@@ -49,11 +49,9 @@
             </select>
             <button id="addTx" class="btn btn-primary">Hinzufügen</button>
         </div>
-        <div class="panel">
+        <div id="chartsPanel" class="panel">
             <h3>Ausgaben nach Kategorien</h3>
             <canvas id="categoryChart"></canvas>
-        </div>
-        <div class="panel">
             <h3>Prozentuale Ausgaben</h3>
             <canvas id="percentageChart"></canvas>
         </div>
@@ -70,7 +68,7 @@
     </div>
 
     <div id="tab-history" class="tab">
-        <div class="panel">
+        <div id="historyPanel" class="panel">
             <h3>Verlauf</h3>
             <div id="historyList" class="history-list"></div>
             <button id="exportCSV" class="btn btn-primary">Verlauf als CSV exportieren</button>
@@ -92,6 +90,23 @@
             <button class="btn btn-primary" data-theme-select="standard">Standard</button>
             <button class="btn btn-primary" data-theme-select="warm">Warm</button>
             <button class="btn btn-primary" data-theme-select="kalt">Kalt</button>
+        </div>
+
+        <!-- Downloads -->
+        <div class="panel">
+            <h3>Downloads</h3>
+            <button id="settingsExportCSV" class="btn btn-primary">Verlauf als CSV herunterladen</button>
+            <button id="settingsExportChart" class="btn btn-primary">Diagramm (PNG) herunterladen</button>
+        </div>
+    </div>
+
+    <!-- Willkommen Modal -->
+    <div id="welcomeModal" class="modal">
+        <div class="modal-content welcome-panel">
+            <h2>Willkommen!</h2>
+            <p>Bitte gib deinen Namen ein, um zu starten.</p>
+            <input type="text" id="welcomeName" placeholder="Dein Name">
+            <button id="welcomeSave" class="btn btn-primary">Los geht's</button>
         </div>
     </div>
 </body>
