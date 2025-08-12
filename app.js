@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   // ========================
-  // Neuer Header-Bereich
+  // Header-Bereich
   // ========================
   const greetingEl = document.getElementById('greeting');
   const monthRangeEl = document.getElementById('monthRange');
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ========================
-  // Ursprüngliche Variablen
+  // Variablen
   // ========================
   const totalBudgetInput = document.getElementById('totalBudget');
   const saveBudgetBtn = document.getElementById('saveBudget');
@@ -190,6 +190,41 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ========================
+  // Tab-Wechsel Navigation
+  // ========================
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const tabName = btn.getAttribute('data-tab');
+      document.querySelectorAll('.tab').forEach(tab => {
+        if (tab.id === `tab-${tabName}`) {
+          tab.classList.add('active');
+          tab.style.display = 'block';
+        } else {
+          tab.classList.remove('active');
+          tab.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  // ========================
+  // Theme-Wechsel
+  // ========================
+  document.querySelectorAll('[data-theme-select]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const theme = btn.getAttribute('data-theme-select');
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+    });
+  });
+
+  const savedTheme = localStorage.getItem('theme') || 'standard';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+
+  // ========================
   // Initialisierung
   // ========================
   updateSummary();
@@ -197,29 +232,3 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCategories();
   updateCharts();
 });
-
-// ========================
-// Tab-Wechsel Navigation
-// ========================
-document.querySelectorAll('.nav-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    // Aktive Klasse bei Buttons setzen
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    // Tabs umschalten
-    const tabName = btn.getAttribute('data-tab');
-    document.querySelectorAll('.tab').forEach(tab => {
-      if (tab.id === `tab-${tabName}`) {
-        tab.classList.add('active');
-        tab.setAttribute('aria-hidden', 'false');
-        tab.style.display = 'block';
-      } else {
-        tab.classList.remove('active');
-        tab.setAttribute('aria-hidden', 'true');
-        tab.style.display = 'none';
-      }
-    });
-  });
-});
-
