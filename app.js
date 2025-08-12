@@ -197,3 +197,29 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCategories();
   updateCharts();
 });
+
+// ========================
+// Tab-Wechsel Navigation
+// ========================
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    // Aktive Klasse bei Buttons setzen
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    // Tabs umschalten
+    const tabName = btn.getAttribute('data-tab');
+    document.querySelectorAll('.tab').forEach(tab => {
+      if (tab.id === `tab-${tabName}`) {
+        tab.classList.add('active');
+        tab.setAttribute('aria-hidden', 'false');
+        tab.style.display = 'block';
+      } else {
+        tab.classList.remove('active');
+        tab.setAttribute('aria-hidden', 'true');
+        tab.style.display = 'none';
+      }
+    });
+  });
+});
+
